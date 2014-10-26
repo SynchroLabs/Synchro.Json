@@ -1,29 +1,41 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using NUnit.Framework;
 
 namespace Synchro.Json.Test
 {
-	class JsonObject : Dictionary<string,object>
-	{
-	}
-
 	[TestFixture()]
-	public class Test
+	public class JsonObjectTests
 	{
 		[Test()]
-		public void TestCase ()
+		public void TestInteger()
 		{
 			JsonObject stuff = new JsonObject();
+
 			stuff["foo"] = 7;
-			stuff["bar"] = "kitty";
-			stuff["baz"] = new object[] { 8, "dog" };
+
 			Assert.AreEqual(7, stuff["foo"]);
+		}
+
+		[Test()]
+		public void TestString()
+		{
+			JsonObject stuff = new JsonObject();
+
+			stuff["bar"] = "kitty";
+
 			Assert.AreEqual("kitty", stuff ["bar"]);
+		}
+
+		[Test()]
+		public void TestArray()
+		{
+			JsonObject stuff = new JsonObject();
+
+			stuff["baz"] = new object[] { 8, "dog" };
+
 			Assert.AreEqual(new object[] { 8, "dog" }, stuff ["baz"]);
 			Assert.AreEqual(8, ((object[]) stuff["baz"])[0]);
 			Assert.AreEqual("dog", ((object[]) stuff["baz"])[1]);
 		}
 	}
 }
-

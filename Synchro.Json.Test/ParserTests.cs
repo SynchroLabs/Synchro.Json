@@ -50,6 +50,20 @@ namespace Synchro.Json.Test
 				},
 				Parser.ParseValue(new StringReader("{\"foo\":0,\"bar\":\"kitty\",\"baz\":[8,\"dog\"]}")));
 		}
+
+		[Test()]
+		public void TestParseObjectWithWhitespace()
+		{
+			Assert.AreEqual(new JsonObject(), Parser.ParseValue(new StringReader("{}")));
+			Assert.AreEqual(
+				new JsonObject()
+				{
+					{ "foo", 0 },
+					{ "bar", "kitty" },
+					{ "baz", new object[] { 8, "dog" } }
+				},
+				Parser.ParseValue(new StringReader("  {  \"foo\"  :  0  ,  \"bar\"  :  \"kitty\"  ,  \"baz\"  :  [  8  ,  \"dog\"  ]  }  ")));
+		}
 	}
 }
 

@@ -7,10 +7,20 @@ namespace Synchro.Json
 {
 	public class Parser
 	{
+		private static void SkipWhitespace(TextReader reader)
+		{
+			while (Char.IsWhiteSpace((char) reader.Peek()))
+			{
+				reader.Read();
+			}
+		}
+
 		private static string ParseString(TextReader reader)
 		{
 			int thisChar;
 			var returnString = new StringBuilder();
+
+			SkipWhitespace(reader);
 
 			// Skip the opening quotes
 
@@ -70,6 +80,8 @@ namespace Synchro.Json
 			int thisChar;
 			int number = 0;
 
+			SkipWhitespace(reader);
+
 			thisChar = reader.Read();
 			if (thisChar == '-')
 			{
@@ -93,9 +105,13 @@ namespace Synchro.Json
 		{
 			var finalList = new List<object>();
 
+			SkipWhitespace(reader);
+
 			// Skip the opening bracket
 
 			reader.Read();
+
+			SkipWhitespace(reader);
 
 			// Read until closing bracket
 
@@ -105,12 +121,16 @@ namespace Synchro.Json
 
 				finalList.Add(ParseValue(reader));
 
+				SkipWhitespace(reader);
+
 				// Skip the comma if any
 
 				if (reader.Peek() == ',')
 				{
 					reader.Read();
 				}
+
+				SkipWhitespace(reader);
 			}
 
 			// Skip the closing bracket
@@ -124,9 +144,13 @@ namespace Synchro.Json
 		{
 			var finalObject = new JsonObject();
 
+			SkipWhitespace(reader);
+
 			// Skip the opening brace
 
 			reader.Read();
+
+			SkipWhitespace(reader);
 
 			// Read until closing brace
 
@@ -139,13 +163,19 @@ namespace Synchro.Json
 
 				name = ParseString(reader);
 
+				SkipWhitespace(reader);
+
 				// Skip the colon
 
 				reader.Read();
 
+				SkipWhitespace(reader);
+
 				// Read the value
 
 				value = ParseValue(reader);
+
+				SkipWhitespace(reader);
 
 				finalObject[name] = value;
 
@@ -155,6 +185,8 @@ namespace Synchro.Json
 				{
 					reader.Read();
 				}
+
+				SkipWhitespace(reader);
 			}
 
 			// Skip the closing brace
@@ -166,6 +198,8 @@ namespace Synchro.Json
 
 		public static object ParseValue(TextReader reader)
 		{
+			SkipWhitespace(reader);
+
 			int lookahead = reader.Peek();
 
 			if ((lookahead == '-') || ((lookahead >= '0') && (lookahead <= '9')))

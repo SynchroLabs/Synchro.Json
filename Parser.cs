@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -88,6 +89,37 @@ namespace Synchro.Json
 			return number * sign;
 		}
 
+		private static object[] ParseArray(TextReader reader)
+		{
+			var finalList = new List<object>();
+
+			// Skip the opening bracket
+
+			reader.Read();
+
+			// Read until closing bracket
+
+			while (reader.Peek() != ']')
+			{
+				// Read a value
+
+				finalList.Add(ParseValue(reader));
+
+				// Skip the comma if any
+
+				if (reader.Peek() == ',')
+				{
+					reader.Read();
+				}
+			}
+
+			// Skip the closing bracket
+
+			reader.Read();
+
+			return finalList.ToArray();
+		}
+
 		public static object ParseValue(TextReader reader)
 		{
 			int lookahead = reader.Peek();
@@ -95,6 +127,10 @@ namespace Synchro.Json
 			if ((lookahead == '-') || ((lookahead >= '0') && (lookahead <= '9')))
 			{
 				return ParseNumber(reader);
+			}
+			else if (lookahead == '[')
+			{
+				return ParseArray(reader);
 			}
 			else
 			{

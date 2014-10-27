@@ -26,6 +26,16 @@ namespace Synchro.Json.Test
 			Assert.AreEqual(int.MaxValue, Parser.ParseValue(new StringReader(string.Format("{0}", int.MaxValue))));
 			Assert.AreEqual(int.MinValue, Parser.ParseValue(new StringReader(string.Format("{0}", int.MinValue))));
 		}
+
+		[Test()]
+		public void TestParseArray()
+		{
+			Assert.AreEqual(new object[] {}, Parser.ParseValue(new StringReader("[]")));
+			Assert.AreEqual(new object[] { 0 }, Parser.ParseValue(new StringReader("[0]")));
+			Assert.AreEqual(new object[] { "abc" }, Parser.ParseValue(new StringReader("[\"abc\"]")));
+			Assert.AreEqual(new object[] { 0, "abc" }, Parser.ParseValue(new StringReader("[0,\"abc\"]")));
+			Assert.AreEqual(new object[] { 0, "abc", new object[] { 1, "def" } }, Parser.ParseValue(new StringReader("[0,\"abc\",[1,\"def\"]]")));
+		}
 	}
 }
 

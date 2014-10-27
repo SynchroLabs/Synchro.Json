@@ -7,10 +7,22 @@ namespace Synchro.Json.Test
 	[TestFixture()]
 	public class ParserTests
 	{
+		private static void TestRoundtrip(string expectedJson, object expectedObject)
+		{
+			object parsedObject = Parser.ParseValue(new StringReader(expectedJson));
+			var writer = new StringWriter();
+
+			Assert.AreEqual(expectedObject, parsedObject);
+
+			Writer.WriteValue(writer, parsedObject);
+
+			Assert.AreEqual(expectedJson, writer.ToString());
+		}
+
 		[Test()]
 		public void TestParseString()
 		{
-			Assert.AreEqual("abc", Parser.ParseValue(new StringReader("\"abc\"")));
+			TestRoundtrip("\"abc\"", "abc");
 		}
 
 		[Test()]
@@ -22,33 +34,33 @@ namespace Synchro.Json.Test
 		[Test()]
 		public void TestParseInteger()
 		{
-			Assert.AreEqual(0, Parser.ParseValue(new StringReader("0")));
-			Assert.AreEqual(int.MaxValue, Parser.ParseValue(new StringReader(string.Format("{0}", int.MaxValue))));
-			Assert.AreEqual(int.MinValue, Parser.ParseValue(new StringReader(string.Format("{0}", int.MinValue))));
+			TestRoundtrip("0", 0);
+			TestRoundtrip(string.Format("{0}", int.MaxValue), int.MaxValue);
+			TestRoundtrip(string.Format("{0}", int.MinValue), int.MinValue);
 		}
 
 		[Test()]
 		public void TestParseArray()
 		{
-			Assert.AreEqual(new object[] {}, Parser.ParseValue(new StringReader("[]")));
-			Assert.AreEqual(new object[] { 0 }, Parser.ParseValue(new StringReader("[0]")));
-			Assert.AreEqual(new object[] { "abc" }, Parser.ParseValue(new StringReader("[\"abc\"]")));
-			Assert.AreEqual(new object[] { 0, "abc" }, Parser.ParseValue(new StringReader("[0,\"abc\"]")));
-			Assert.AreEqual(new object[] { 0, "abc", new object[] { 1, "def" } }, Parser.ParseValue(new StringReader("[0,\"abc\",[1,\"def\"]]")));
+			TestRoundtrip("[]", new object[] {});
+			TestRoundtrip("[0]", new object[] { 0 });
+			TestRoundtrip("[\"abc\"]", new object[] { "abc" });
+			TestRoundtrip("[0,\"abc\"]", new object[] { 0, "abc" });
+			TestRoundtrip("[0,\"abc\",[1,\"def\"]]", new object[] { 0, "abc", new object[] { 1, "def" } });
 		}
 
 		[Test()]
 		public void TestParseObject()
 		{
-			Assert.AreEqual(new JsonObject(), Parser.ParseValue(new StringReader("{}")));
-			Assert.AreEqual(
-				new JsonObject()
-				{
+			TestRoundtrip("{}", new JsonObject());
+			TestRoundtrip(
+				"{\"foo\":0,\"bar\":\"kitty\",\"baz\":[8,\"dog\"]}",
+				new JsonObject() {
 					{ "foo", 0 },
 					{ "bar", "kitty" },
 					{ "baz", new object[] { 8, "dog" } }
-				},
-				Parser.ParseValue(new StringReader("{\"foo\":0,\"bar\":\"kitty\",\"baz\":[8,\"dog\"]}")));
+				}
+			);
 		}
 
 		[Test()]

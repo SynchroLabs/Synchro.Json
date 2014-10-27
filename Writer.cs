@@ -77,6 +77,11 @@ namespace Synchro.Json
 			writer.Write(']');
 		}
 
+		private static void WriteBoolean(TextWriter writer, bool b)
+		{
+			writer.Write(b ? "true" : "false");
+		}
+
 		public static void WriteValue(TextWriter writer, object value)
 		{
 			if (value.GetType() == typeof(JsonObject))
@@ -94,6 +99,10 @@ namespace Synchro.Json
 			else if (value.GetType() == typeof(object[]))
 			{
 				WriteArray(writer, (object[])value);
+			}
+			else if (value.GetType() == typeof(bool))
+			{
+				WriteBoolean(writer, (bool)value);
 			}
 			else
 			{

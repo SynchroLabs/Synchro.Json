@@ -196,6 +196,31 @@ namespace Synchro.Json
 			return finalObject;
 		}
 
+		private static object ParseTrue(TextReader reader)
+		{
+			// Skip 't', 'r', 'u', 'e'
+
+			reader.Read();
+			reader.Read();
+			reader.Read();
+			reader.Read();
+
+			return true;
+		}
+
+		private static object ParseFalse(TextReader reader)
+		{
+			// Skip 'f', 'a', 'l', 's', 'e'
+
+			reader.Read();
+			reader.Read();
+			reader.Read();
+			reader.Read();
+			reader.Read();
+
+			return false;
+		}
+
 		public static object ParseValue(TextReader reader)
 		{
 			SkipWhitespace(reader);
@@ -213,6 +238,14 @@ namespace Synchro.Json
 			else if (lookahead == '{')
 			{
 				return ParseObject(reader);
+			}
+			else if (lookahead == 't')
+			{
+				return ParseTrue(reader);
+			}
+			else if (lookahead == 'f')
+			{
+				return ParseFalse(reader);
 			}
 			else
 			{

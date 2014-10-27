@@ -76,6 +76,13 @@ namespace Synchro.Json.Test
 				},
 				Parser.ParseValue(new StringReader("  {  \"foo\"  :  0  ,  \"bar\"  :  \"kitty\"  ,  \"baz\"  :  [  8  ,  \"dog\"  ]  }  ")));
 		}
+
+		[Test()]
+		public void TestParseBoolean()
+		{
+			TestRoundtrip("true", true);
+			TestRoundtrip("false", false);
+		}
 	}
 }
 

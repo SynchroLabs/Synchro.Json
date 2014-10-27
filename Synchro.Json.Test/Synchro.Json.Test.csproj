@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="JsonObjectTests.cs" />
     <Compile Include="ParserTests.cs" />
+    <Compile Include="WriterTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

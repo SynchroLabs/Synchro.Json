@@ -28,7 +28,7 @@ namespace Synchro.Json.Test
 		[Test()]
 		public void TestParseStringEscapes()
 		{
-			Assert.AreEqual("\"\\/\b\f\n\r\t\u20AC", Parser.ParseValue(new StringReader(@"""\""\\\/\b\f\n\r\t\u20AC""")));
+			TestRoundtrip(@"""\""\\\/\b\f\n\r\t\u20AC""", "\"\\/\b\f\n\r\t\u20AC");
 		}
 
 		[Test()]

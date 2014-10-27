@@ -8,7 +8,46 @@ namespace Synchro.Json
 		private static void WriteString(TextWriter writer, string _string)
 		{
 			writer.Write('\"');
-			writer.Write(_string);
+			foreach (var _char in _string)
+			{
+				switch (_char)
+				{
+					case '\\':
+						writer.Write(@"\\");
+						break;
+					case '/':
+						writer.Write(@"\/");
+						break;
+					case '"':
+						writer.Write(@"\""");
+						break;
+					case '\b':
+						writer.Write(@"\b");
+						break;
+					case '\f':
+						writer.Write(@"\f");
+						break;
+					case '\n':
+						writer.Write(@"\n");
+						break;
+					case '\r':
+						writer.Write(@"\r");
+						break;
+					case '\t':
+						writer.Write(@"\t");
+						break;
+					default:
+						if ((_char < ' ') || (_char > '\u007E'))
+						{
+							writer.Write(string.Format("\\u{0:X4}", (int) _char));
+						}
+						else
+						{
+							writer.Write(_char);
+						}
+						break;
+				}
+			}
 			writer.Write('\"');
 		}
 

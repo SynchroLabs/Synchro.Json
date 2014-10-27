@@ -221,6 +221,18 @@ namespace Synchro.Json
 			return false;
 		}
 
+		static object ParseNull(TextReader reader)
+		{
+			// Skip 'n', 'u', 'l', 'l'
+
+			reader.Read();
+			reader.Read();
+			reader.Read();
+			reader.Read();
+
+			return null;
+		}
+
 		public static object ParseValue(TextReader reader)
 		{
 			SkipWhitespace(reader);
@@ -246,6 +258,10 @@ namespace Synchro.Json
 			else if (lookahead == 'f')
 			{
 				return ParseFalse(reader);
+			}
+			else if (lookahead == 'n')
+			{
+				return ParseNull(reader);
 			}
 			else
 			{

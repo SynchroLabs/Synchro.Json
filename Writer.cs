@@ -82,9 +82,18 @@ namespace Synchro.Json
 			writer.Write(b ? "true" : "false");
 		}
 
+		static void WriteNull(TextWriter writer)
+		{
+			writer.Write("null");
+		}
+
 		public static void WriteValue(TextWriter writer, object value)
 		{
-			if (value.GetType() == typeof(JsonObject))
+			if (value == null)
+			{
+				WriteNull(writer);
+			}
+			else if (value.GetType() == typeof(JsonObject))
 			{
 				WriteObject(writer, (JsonObject)value);
 			}

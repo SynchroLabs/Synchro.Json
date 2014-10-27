@@ -83,6 +83,12 @@ namespace Synchro.Json.Test
 			TestRoundtrip("true", true);
 			TestRoundtrip("false", false);
 		}
+
+		[Test()]
+		public void TestParseNull()
+		{
+			TestRoundtrip("null", null);
+		}
 	}
 }
 

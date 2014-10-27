@@ -12,6 +12,12 @@ namespace Synchro.Json.Test
 		{
 			Assert.AreEqual("abc", Parser.ParseString(new StringReader("\"abc\"")));
 		}
+
+		[Test()]
+		public void TestParseStringEscapes()
+		{
+			Assert.AreEqual("\"\\/\b\f\n\r\t\u20AC", Parser.ParseString(new StringReader(@"""\""\\\/\b\f\n\r\t\u20AC""")));
+		}
 	}
 }
 

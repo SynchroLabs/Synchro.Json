@@ -89,6 +89,13 @@ namespace Synchro.Json.Test
 		{
 			TestRoundtrip("null", null);
 		}
+
+		[Test()]
+		[ExpectedException(typeof(IOException))]
+		public void TestUnterminatedString()
+		{
+			Parser.ParseValue(new StringReader("\"abc"));
+		}
 	}
 }
 

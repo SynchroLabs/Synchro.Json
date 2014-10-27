@@ -30,6 +30,11 @@ namespace Synchro.Json
 
 			while ((thisChar = reader.Read()) != '"')
 			{
+				if (thisChar == -1)
+				{
+					throw new IOException("Unexpected end of stream");
+				}
+
 				if (thisChar == '\\')
 				{
 					thisChar = reader.Read();

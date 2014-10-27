@@ -6,7 +6,7 @@ namespace Synchro.Json
 {
 	public class Parser
 	{
-		public static string ParseString(TextReader reader)
+		private static string ParseString(TextReader reader)
 		{
 			int thisChar;
 			var returnString = new StringBuilder();
@@ -63,7 +63,7 @@ namespace Synchro.Json
 			return returnString.ToString();
 		}
 
-		public static int ParseNumber(TextReader reader)
+		private static int ParseNumber(TextReader reader)
 		{
 			int sign = 1;
 			int thisChar;
@@ -86,6 +86,20 @@ namespace Synchro.Json
 			}
 
 			return number * sign;
+		}
+
+		public static object ParseValue(TextReader reader)
+		{
+			int lookahead = reader.Peek();
+
+			if ((lookahead == '-') || ((lookahead >= '0') && (lookahead <= '9')))
+			{
+				return ParseNumber(reader);
+			}
+			else
+			{
+				return ParseString(reader);
+			}
 		}
 	}
 }

@@ -62,6 +62,31 @@ namespace Synchro.Json
 
 			return returnString.ToString();
 		}
+
+		public static int ParseNumber(TextReader reader)
+		{
+			int sign = 1;
+			int thisChar;
+			int number = 0;
+
+			thisChar = reader.Read();
+			if (thisChar == '-')
+			{
+				sign = -1;
+			}
+			else
+			{
+				number = thisChar - '0';
+			}
+
+			while ((reader.Peek() >= '0') && (reader.Peek() <= '9'))
+			{
+				number *= 10;
+				number += reader.Read() - '0';
+			}
+
+			return number * sign;
+		}
 	}
 }
 

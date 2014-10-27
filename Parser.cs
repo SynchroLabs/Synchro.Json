@@ -9,9 +9,22 @@ namespace Synchro.Json
 	{
 		private static void SkipWhitespace(TextReader reader)
 		{
-			while (Char.IsWhiteSpace((char) reader.Peek()))
+			while ((Char.IsWhiteSpace((char)reader.Peek())) || (reader.Peek() == '/'))
 			{
-				reader.Read();
+				while (Char.IsWhiteSpace((char)reader.Peek()))
+				{
+					reader.Read();
+				}
+
+				if (reader.Peek() == '/')
+				{
+					reader.Read();
+
+					while ((reader.Peek() != '\r') && (reader.Peek() != '\n') && (reader.Peek() != -1))
+					{
+						reader.Read();
+					}
+				}
 			}
 		}
 

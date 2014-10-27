@@ -96,6 +96,33 @@ namespace Synchro.Json.Test
 		{
 			Parser.ParseValue(new StringReader("\"abc"));
 		}
+
+		[Test()]
+		public void TestComments()
+		{
+			var jsonWithComments = @"
+// This is a comment
+
+{
+	// The foo element is my favorite
+
+	""foo""  :  0,
+	""bar""  :  ""kitty"",
+
+	// The baz element, he's OK also
+
+	""baz""  :  [  8  ,  ""dog""  ]
+}
+";
+			Assert.AreEqual(
+				new JsonObject()
+				{
+					{ "foo", 0 },
+					{ "bar", "kitty" },
+					{ "baz", new object[] { 8, "dog" } }
+				},
+				Parser.ParseValue(new StringReader(jsonWithComments)));
+		}
 	}
 }
 

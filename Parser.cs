@@ -120,6 +120,50 @@ namespace Synchro.Json
 			return finalList.ToArray();
 		}
 
+		private static JsonObject ParseObject(TextReader reader)
+		{
+			var finalObject = new JsonObject();
+
+			// Skip the opening brace
+
+			reader.Read();
+
+			// Read until closing brace
+
+			while (reader.Peek() != '}')
+			{
+				string name;
+				object value;
+
+				// Read a string
+
+				name = ParseString(reader);
+
+				// Skip the colon
+
+				reader.Read();
+
+				// Read the value
+
+				value = ParseValue(reader);
+
+				finalObject[name] = value;
+
+				// Skip the comma if any
+
+				if (reader.Peek() == ',')
+				{
+					reader.Read();
+				}
+			}
+
+			// Skip the closing brace
+
+			reader.Read();
+
+			return finalObject;
+		}
+
 		public static object ParseValue(TextReader reader)
 		{
 			int lookahead = reader.Peek();
@@ -131,6 +175,10 @@ namespace Synchro.Json
 			else if (lookahead == '[')
 			{
 				return ParseArray(reader);
+			}
+			else if (lookahead == '{')
+			{
+				return ParseObject(reader);
 			}
 			else
 			{

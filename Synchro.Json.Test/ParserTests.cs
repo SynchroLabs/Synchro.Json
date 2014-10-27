@@ -36,6 +36,20 @@ namespace Synchro.Json.Test
 			Assert.AreEqual(new object[] { 0, "abc" }, Parser.ParseValue(new StringReader("[0,\"abc\"]")));
 			Assert.AreEqual(new object[] { 0, "abc", new object[] { 1, "def" } }, Parser.ParseValue(new StringReader("[0,\"abc\",[1,\"def\"]]")));
 		}
+
+		[Test()]
+		public void TestParseObject()
+		{
+			Assert.AreEqual(new JsonObject(), Parser.ParseValue(new StringReader("{}")));
+			Assert.AreEqual(
+				new JsonObject()
+				{
+					{ "foo", 0 },
+					{ "bar", "kitty" },
+					{ "baz", new object[] { 8, "dog" } }
+				},
+				Parser.ParseValue(new StringReader("{\"foo\":0,\"bar\":\"kitty\",\"baz\":[8,\"dog\"]}")));
+		}
 	}
 }
 

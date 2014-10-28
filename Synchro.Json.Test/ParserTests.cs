@@ -134,7 +134,6 @@ namespace Synchro.Json.Test
 		}
 
 		[Test()]
-		[Ignore("If the current locale decimal separator is not '.', JSON conversion will fail.")]
 		public void TestParseDoubleCrazyLocale()
 		{
 			var crazyCulture = new CultureInfo("en-US");

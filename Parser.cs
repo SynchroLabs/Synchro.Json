@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Globalization;
 
 namespace Synchro.Json
 {
@@ -107,7 +108,7 @@ namespace Synchro.Json
 
 			if (numberData.IndexOfAny("eE.".ToCharArray()) >= 0)
 			{
-				return double.Parse(numberData);
+				return double.Parse(numberData, CultureInfo.InvariantCulture.NumberFormat);
 			}
 			else
 			{

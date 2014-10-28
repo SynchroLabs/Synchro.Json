@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Globalization;
 
 namespace Synchro.Json
 {
@@ -58,7 +59,7 @@ namespace Synchro.Json
 
 		private static void WriteNumber(TextWriter writer, double d)
 		{
-			writer.Write(d);
+			writer.Write(d.ToString(CultureInfo.InvariantCulture.NumberFormat));
 		}
 
 		private static void WriteArray(TextWriter writer, object[] array)

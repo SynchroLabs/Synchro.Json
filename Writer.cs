@@ -56,6 +56,11 @@ namespace Synchro.Json
 			writer.Write(i);
 		}
 
+		private static void WriteNumber(TextWriter writer, double d)
+		{
+			writer.Write(d);
+		}
+
 		private static void WriteArray(TextWriter writer, object[] array)
 		{
 			bool firstElement = true;
@@ -104,6 +109,10 @@ namespace Synchro.Json
 			else if (value.GetType() == typeof(int))
 			{
 				WriteNumber(writer, (int)value);
+			}
+			else if (value.GetType() == typeof(double))
+			{
+				WriteNumber(writer, (double)value);
 			}
 			else if (value.GetType() == typeof(object[]))
 			{

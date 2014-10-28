@@ -92,31 +92,27 @@ namespace Synchro.Json
 			return returnString.ToString();
 		}
 
-		private static int ParseNumber(TextReader reader)
+		private static object ParseNumber(TextReader reader)
 		{
-			int sign = 1;
-			int thisChar;
-			int number = 0;
+			var numberBuilder = new StringBuilder();
 
 			SkipWhitespace(reader);
 
-			thisChar = reader.Read();
-			if (thisChar == '-')
+			while ("0123456789Ee.-+".IndexOf((char) reader.Peek()) >= 0)
 			{
-				sign = -1;
+				numberBuilder.Append((char)reader.Read());
+			}
+
+			var numberData = numberBuilder.ToString();
+
+			if (numberData.IndexOfAny("eE.".ToCharArray()) >= 0)
+			{
+				return double.Parse(numberData);
 			}
 			else
 			{
-				number = thisChar - '0';
+				return int.Parse(numberData);
 			}
-
-			while ((reader.Peek() >= '0') && (reader.Peek() <= '9'))
-			{
-				number *= 10;
-				number += reader.Read() - '0';
-			}
-
-			return number * sign;
 		}
 
 		private static object[] ParseArray(TextReader reader)

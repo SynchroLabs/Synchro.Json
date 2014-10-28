@@ -1,6 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using System.IO;
+using System.Threading;
+using System.Globalization;
 
 namespace Synchro.Json.Test
 {
@@ -122,6 +124,34 @@ namespace Synchro.Json.Test
 					{ "baz", new object[] { 8, "dog" } }
 				},
 				Parser.ParseValue(new StringReader(jsonWithComments)));
+		}
+
+		[Test()]
+		public void TestParseDouble()
+		{
+			TestRoundtrip("0.001", .001);
+			TestRoundtrip("6.02E+23", 6.02E+23);
+		}
+
+		[Test()]
+		[Ignore("If the current locale decimal separator is not '.', JSON conversion will fail.")]
+		public void TestParseDoubleCrazyLocale()
+		{
+			var crazyCulture = new CultureInfo("en-US");
+			var oldCulture = Thread.CurrentThread.CurrentCulture;
+
+			crazyCulture.NumberFormat.NumberDecimalSeparator = "Z";
+
+			Thread.CurrentThread.CurrentCulture = crazyCulture;
+			try
+			{
+				TestRoundtrip("0.001", .001);
+				TestRoundtrip("6.02E+23", 6.02E+23);
+			}
+			finally
+			{
+				Thread.CurrentThread.CurrentCulture = oldCulture;
+			}
 		}
 	}
 }

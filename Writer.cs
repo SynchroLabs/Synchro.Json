@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Globalization;
 
@@ -6,47 +7,33 @@ namespace Synchro.Json
 {
 	public class Writer
 	{
+		private static Dictionary<char, string> charSubstitutions = new Dictionary<char, string>() {
+			{ '\\', @"\\" },
+			{ '/', @"\/" },
+			{ '"', @"\""" },
+			{ '\b', @"\b" },
+			{ '\f', @"\f" },
+			{ '\n', @"\n" },
+			{ '\r', @"\r" },
+			{ '\t', @"\t" },
+		};
+
 		private static void WriteString(TextWriter writer, string _string)
 		{
 			writer.Write('\"');
 			foreach (var _char in _string)
 			{
-				switch (_char)
+				if (charSubstitutions.ContainsKey(_char))
 				{
-					case '\\':
-						writer.Write(@"\\");
-						break;
-					case '/':
-						writer.Write(@"\/");
-						break;
-					case '"':
-						writer.Write(@"\""");
-						break;
-					case '\b':
-						writer.Write(@"\b");
-						break;
-					case '\f':
-						writer.Write(@"\f");
-						break;
-					case '\n':
-						writer.Write(@"\n");
-						break;
-					case '\r':
-						writer.Write(@"\r");
-						break;
-					case '\t':
-						writer.Write(@"\t");
-						break;
-					default:
-						if ((_char < ' ') || (_char > '\u007E'))
-						{
-							writer.Write(string.Format("\\u{0:X4}", (int) _char));
-						}
-						else
-						{
-							writer.Write(_char);
-						}
-						break;
+					writer.Write(charSubstitutions[_char]);
+				}
+				else if ((_char < ' ') || (_char > '\u007E'))
+				{
+					writer.Write(string.Format("\\u{0:X4}", (int) _char));
+				}
+				else
+				{
+					writer.Write(_char);
 				}
 			}
 			writer.Write('\"');
@@ -93,35 +80,24 @@ namespace Synchro.Json
 			writer.Write("null");
 		}
 
+		private static Dictionary<Type, Action<TextWriter, object>> writerActions = new Dictionary<Type, Action<TextWriter, object>>() {
+			{ typeof(JsonObject), (writer, value) => { WriteObject(writer, (JsonObject) value); } },
+			{ typeof(string), (writer, value) => { WriteString(writer, (string) value); } },
+			{ typeof(int), (writer, value) => { WriteNumber(writer, (int)value); } },
+			{ typeof(double), (writer, value) => { WriteNumber(writer, (double)value); } },
+			{ typeof(object[]), (writer, value) => { WriteArray(writer, (object[])value); } },
+			{ typeof(bool), (writer, value) => { WriteBoolean(writer, (bool)value); } },
+		};
+
 		public static void WriteValue(TextWriter writer, object value)
 		{
 			if (value == null)
 			{
 				WriteNull(writer);
 			}
-			else if (value.GetType() == typeof(JsonObject))
+			else if (writerActions.ContainsKey(value.GetType()))
 			{
-				WriteObject(writer, (JsonObject)value);
-			}
-			else if (value.GetType() == typeof(string))
-			{
-				WriteString(writer, (string)value);
-			}
-			else if (value.GetType() == typeof(int))
-			{
-				WriteNumber(writer, (int)value);
-			}
-			else if (value.GetType() == typeof(double))
-			{
-				WriteNumber(writer, (double)value);
-			}
-			else if (value.GetType() == typeof(object[]))
-			{
-				WriteArray(writer, (object[])value);
-			}
-			else if (value.GetType() == typeof(bool))
-			{
-				WriteBoolean(writer, (bool)value);
+				writerActions[value.GetType()](writer, value);
 			}
 			else
 			{

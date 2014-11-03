@@ -37,5 +37,32 @@ namespace Synchro.Json.Test
 			Assert.AreEqual(8, ((object[]) stuff["baz"])[0]);
 			Assert.AreEqual("dog", ((object[]) stuff["baz"])[1]);
 		}
+
+		[Test()]
+		public void TestDeepClone()
+		{
+			JsonObject stuff = new JsonObject() {
+				{ "a", new JsonObject() {
+						{ "b", new JsonObject() {
+								{ "c", "d" } } } }
+				},
+				{ "e", new object[] { new JsonObject() { { "f", "g" } }, "h" } }
+			};
+			JsonObject duplicateStuff = new JsonObject() {
+				{ "a", new JsonObject() {
+						{ "b", new JsonObject() {
+								{ "c", "d" } } } }
+				},
+				{ "e", new object[] { new JsonObject() { { "f", "g" } }, "h" } }
+			};
+			var stuffClone = stuff.DeepClone();
+
+			Assert.AreEqual(duplicateStuff, stuffClone);
+
+			Assert.AreNotSame(stuff["a"], stuffClone["a"]);
+			Assert.AreNotSame(stuff["e"], stuffClone["e"]);
+			Assert.AreNotSame(((object[])stuff["e"])[0], ((object[])stuffClone["e"])[0]);
+			Assert.AreNotSame(((JsonObject) stuff["a"])["b"], ((JsonObject) stuffClone["a"])["b"]);
+		}
 	}
 }

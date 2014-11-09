@@ -43,6 +43,26 @@ namespace Synchro.Json
 
 			return newObject;
 		}
+
+		public object FindByPath(string path)
+		{
+			var pathElements = path.Split('.');
+			object currentObject = this;
+
+			foreach (var element in pathElements)
+			{
+				if (currentObject is object[])
+				{
+					currentObject = ((object[])currentObject)[int.Parse(element)];
+				}
+				else if (currentObject is JsonObject)
+				{
+					currentObject = ((JsonObject)currentObject)[element];
+				}
+			}
+
+			return currentObject;
+		}
 	}
 }
 

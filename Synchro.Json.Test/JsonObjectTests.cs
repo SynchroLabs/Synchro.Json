@@ -64,5 +64,18 @@ namespace Synchro.Json.Test
 			Assert.AreNotSame(((object[])stuff["e"])[0], ((object[])stuffClone["e"])[0]);
 			Assert.AreNotSame(((JsonObject) stuff["a"])["b"], ((JsonObject) stuffClone["a"])["b"]);
 		}
+
+		[Test()]
+		public void TestPath()
+		{
+			JsonObject stuff = new JsonObject() {
+				{ "a", new JsonObject() {
+						{ "b", new JsonObject() {
+								{ "c", "d" } } } }
+				},
+				{ "e", new object[] { new JsonObject() { { "f", "g" } }, "h" } }
+			};
+			Assert.AreSame(((JsonObject)((object[]) stuff["e"])[0])["f"], stuff.FindByPath("e.0.f"));
+		}
 	}
 }

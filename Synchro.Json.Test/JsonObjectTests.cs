@@ -75,7 +75,7 @@ namespace Synchro.Json.Test
 				},
 				{ "e", new object[] { new JsonObject() { { "f", "g" } }, "h" } }
 			};
-			Assert.AreSame(((JsonObject)((object[]) stuff["e"])[0])["f"], stuff.FindByPath("e.0.f"));
+			Assert.AreSame(((JsonObject)((object[]) stuff["e"])[0])["f"], stuff.FindByPath("e[0].f"));
 		}
 	}
 }

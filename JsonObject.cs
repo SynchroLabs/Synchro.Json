@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Synchro.Json
 {
@@ -44,9 +45,11 @@ namespace Synchro.Json
 			return newObject;
 		}
 
+		private static Regex pathRegex = new Regex(@"\[(\d+)\]");
+
 		public object FindByPath(string path)
 		{
-			var pathElements = path.Split('.');
+			var pathElements = pathRegex.Replace(path, ".$1").Split('.');
 			object currentObject = this;
 
 			foreach (var element in pathElements)

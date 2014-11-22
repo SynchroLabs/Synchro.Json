@@ -127,6 +127,34 @@ namespace Synchro.Json.Test
 		}
 
 		[Test()]
+		public void TestMultilineComments()
+		{
+			var jsonWithComments = @"
+// This is a comment
+
+{
+	// The foo element is my favorite. But comment him out for now.
+
+/*
+	""foo""  :  0,
+*/
+	""bar""  :  ""kitty"",
+
+	// The baz element, he's OK also
+
+	""baz""  :  [  8  ,  ""dog""  ]
+}
+";
+			Assert.AreEqual(
+				new JsonObject()
+				{
+					{ "bar", "kitty" },
+					{ "baz", new object[] { 8, "dog" } }
+				},
+				Parser.ParseValue(new StringReader(jsonWithComments)));
+		}
+
+		[Test()]
 		public void TestParseDouble()
 		{
 			TestRoundtrip("0.001", .001);

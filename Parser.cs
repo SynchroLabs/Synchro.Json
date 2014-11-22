@@ -19,11 +19,37 @@ namespace Synchro.Json
 
 				if (reader.Peek() == '/')
 				{
-					reader.Read();
+					reader.Read(); // Eat the initial /
+					var nextChar = reader.Read();
 
-					while ((reader.Peek() != '\r') && (reader.Peek() != '\n') && (reader.Peek() != -1))
+					if (nextChar == '/')
 					{
-						reader.Read();
+						while ((reader.Peek() != '\r') && (reader.Peek() != '\n') && (reader.Peek() != -1))
+						{
+							reader.Read();
+						}
+					}
+					else /* nextChar assumed to be a * */
+					{
+						while (true)
+						{
+							nextChar = reader.Read();
+
+							if (nextChar == -1)
+							{
+								break;
+							}
+							else if (nextChar == '*')
+							{
+								// If the next character is a '/' eat it, otherwise keep going
+
+								if (reader.Peek() == '/')
+								{
+									reader.Read();
+									break;
+								}
+							}
+						}
 					}
 				}
 			}
